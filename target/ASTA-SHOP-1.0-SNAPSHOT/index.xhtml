@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+        <h:outputStylesheet name="bootstrap.css" library="css"/>
+        <h:outputStylesheet name="bootstrap-theme.css" library="css"/>
+        <h:outputStylesheet name="home.css" library="css"/>
+        <h:outputScript name="home.js" library="js"/>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <!--        <h:outputScript target="body" name="jquery-3.2.1.min.js" library="jquery/js"/>-->
+        <h:outputScript name="bootstrap.js" library="js"/>
+        
+        <!--        <h:outputStylesheet name="grid/grid.css" library="primefaces" />-->
+        <title>ASTA Shop</title>
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.loggedIn) {
+                    PF('dlg').jq.effect("shake", {times: 5}, 100);
+                } else {
+                    PF('dlg').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+        </script>
+
+    </h:head>
+    <h:body>
+        <h:form id="mainForm">
+            <p:growl id="msg" life="6000"  showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <p:layout id="fullPage" fullPage="true" widgetVar="layoutWdgt">
+                    <p:layoutUnit class="lu-top" position="north">
+                        <ui:insert name="top">
+                            <ui:include src="header.xhtml"/>
+                        </ui:insert>
+                    </p:layoutUnit>
+                    <p:layoutUnit class="lu-left" position="west" size="250" header="Kategory" resizable="true" closable="true" collapsible="true">
+                        <ui:insert name="left">
+                            <ui:include src="menue.xhtml"/>
+                        </ui:insert>
+                    </p:layoutUnit>
+                    <p:layoutUnit class="lu-right" position="east" minSize="250" header="Warenkorb" collapsible="true" resizable="true" visible="false" effect="drop" >                    
+                        <ui:insert name="right">
+                            <ui:include src="cartshortview.xhtml"/>
+                        </ui:insert>
+                    </p:layoutUnit>
+                    <p:layoutUnit class="lu-center" position="center" >
+                        <ui:insert name="content">
+                            <div class="ui-fluid content">
+                                <p:carousel  class="carousel-offer" var="info" numVisible="1" circular="true" responsive="true" value="">
+
+                                    <p:graphicImage class="img-responsive" value="http://via.placeholder.com/1020x350"/> 
+                                    <f:facet name="footer">
+                                        <p:panelGrid columns="2" layout="grid">
+                                            <h4 style="color:red">Preis Im Angebot</h4>
+                                            <p:commandLink title="View Detail">
+                                                <h:outputText styleClass="fa fa-shopping-cart" style="margin:0 auto;" />
+                                            </p:commandLink>  
+                                        </p:panelGrid>
+                                    </f:facet>
+                                </p:carousel>
+                            </div>
+                        </ui:insert>
+                    </p:layoutUnit>
+                    <p:layoutUnit class="lu-bottom" position="south" minSize="55">
+                        <ui:insert name="bottom">
+                            <ui:include src="footer.xhtml"/>
+                        </ui:insert>
+                    </p:layoutUnit>
+                </p:layout>
+            </div>    
+        </h:form>
+        <script src="resources/js/jquery-3.2.1.min.js"></script>
+    </h:body>
+</html>
+

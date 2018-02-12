@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://java.sun.com/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:panelGrid columns="3" layout="grid">
+        <p:column>
+            <h:graphicImage width="250" height="80" class="img-responsive" value="#{resource['img:logo.png']}" />
+        </p:column>
+        <p:column>
+            <p:panelGrid style="margin-top: 15px" columns="2" layout="grid">
+                <p:inputText class="form-control" pt:placeholder="Suchen"/>
+                <p:commandButton type="button" icon="ui-icon-search" value="Suchbegriff..."/> 
+            </p:panelGrid>
+        </p:column>
+        <p:column>
+            <p:panelGrid class="pull-right" style="margin-top: 15px" columns="5" layout="grid">
+                <p:commandButton icon="fa fa-user" id="accountBtn" value="Konto" type="button"/>
+
+                <div class="ui-fluid">
+                    <!--                    action="cartView.xhtml" -->
+                    <p:commandButton value="(#{shoppingCartController.itemnumber})" icon="fa fa-shopping-cart" type="button"  
+                                     onclick="PF('layoutWdgt').toggle('east')"/>   
+                    <!--<p:commandButton value="({shoppingCartController.itemnumber})" icon="fa fa-shopping-cart" action="{layoutController.collapseShppingCart}" update="mainForm"/>             -->
+                </div>
+            </p:panelGrid>
+        </p:column>
+    </p:panelGrid>
+
+    <p:panelGrid columns="2" layout="grid">
+        <p:breadCrumb>
+            <p:menuitem icon="ui-icon-home" value="Home" action="index"/>
+            <p:menuitem value="Papeterie" url="#" />
+            <p:menuitem value="Ordnen" url="#" />
+            <p:menuitem value="Schreibwaren" url="#" />
+            <p:menuitem value="Büromaterial" url="#" />
+            <p:menuitem value="Lehrmittel" url="#" />
+            <p:menuitem value="Kopierservice" url="#" />
+        </p:breadCrumb>
+        <p:panelGrid class="pull-right" columns="8" layout="grid">
+            <p:outputLabel for="themes" value=" Motiv:" styleClass="fa fa-paint-brush"/>
+            <p:themeSwitcher id="themes" >
+                <f:selectItem itemLabel="wähle ein Motiv aus" itemValue="" />
+                <f:selectItems value="{themeService.themes}" />
+            </p:themeSwitcher>
+            <p:outputLabel for="language" value=" Sprache:" styleClass="fa fa-language" />
+            <p:selectOneMenu id="language">
+                <f:selectItem itemLabel="Wähle eins" itemValue="" />
+                <f:selectItem itemLabel="Deutsch" itemValue="Deutsch" />
+                <f:selectItem itemLabel="Englisch" itemValue="PS4" />
+                <f:selectItem itemLabel="French" itemValue="French" />
+            </p:selectOneMenu>
+        </p:panelGrid>
+    </p:panelGrid>
+    <p:overlayPanel for="accountBtn" appendToBody="true" dismissable="true"  showEffect="fade" hideEffect="explode">
+        <p:panelGrid columns="1" layout="grid" style="align-content: center; align-items: center">
+            <p:commandButton value="Einlogen" type="button" icon="fa fa-sign-in" title="login" onclick="PF('dlglogin').show();PF('accountBtn').hide()" />
+            <p:commandButton icon="fa fa-user-plus" value="registrieren" onclick="PF('dlgregister').show();"/>
+            <p:commandLink action="orderView.xhtml" title="Bestellung Ansicht">
+                <h:outputText value="Bestellungen" styleClass="fa fa-shopping-cart" style="margin:0 auto;" />
+            </p:commandLink>
+            <p:commandLink action="accountmanager.xhtml" title="Persönliche Daten">
+                <h:outputText value="Mein Konto" styleClass="fa fa-gears" style="margin:0 auto;" />
+            </p:commandLink>
+        </p:panelGrid>
+    </p:overlayPanel>
+    <!--    Login Dialog-->
+    <p:dialog header="Login" appendTo="@(body)" width="auto" height="auto" modal="true" responsive="true" widgetVar="dlglogin" resizable="false" closable="true" position="center">
+        <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+            <h:outputLabel for="username" value="Benutzername:"  />
+            <p:inputText id="username"  value="{customerController.customer.username}" required="true" label="username" pt:placeholder="Ihre Benutzername oder E-mail-Adresse*"/>
+
+            <h:outputLabel for="password" value="Password:" />
+            <p:password id="password" value="{customerController.customer.password}" required="true" label="password" pt:placeholder="Ihre Passwort*"/>
+            <p:commandButton value="Einlogen" update="msg" actionListener="{customerController.login}" icon="fa fa-sign-in"
+                             oncomplete="handleLoginRequest(xhr, status, args)" />
+            <p:commandLink value="Password vergessen?" onclick="PF('dlglogin').hide();PF('dlgforgetpwd').show();"/>
+
+            <f:facet name="footer">
+            </f:facet>  
+        </p:panelGrid>
+    </p:dialog>
+    <!--Password forgot-->
+    <p:dialog header="Password vergessen?" appendTo="@(body)" width="auto" height="auto" modal="true" responsive="true" widgetVar="dlgforgetpwd" resizable="false" closable="true" position="center">
+        <p:panelGrid columns="2" layout="grid">
+            <p:column>
+                <h:outputLabel for="emailcheck" value="E-Mail:"  />
+            </p:column>
+            <p:column>
+                <p:inputText id="emailcheck" value="#{customerController.customer.email}" required="true" label="email" pt:placeholder="Ihre Benutzername oder E-mail-Adresse*"/>
+            </p:column>
+            <p:column colspan="2">
+                <h:outputText value="Geben Sie die von Ihnen gespeicherte E-Mail-Adresse oder den Benutzernamen ein."/>
+            </p:column>
+            <p:column colspan="2">
+                <p:commandButton value="Zurück" icon="fa fa-backward" onclick="PF('dlgforgetpwd').hide();PF('dlglogin').show();"/>
+                <p:commandButton value="Weiter" icon="fa fa-chevron-circle-right" onclick="PF('dlgforgetpwd').hide();PF('dlgpwdsuccess').show();"/>
+            </p:column>
+        </p:panelGrid>
+        <f:facet name="footer">
+        </f:facet>  
+    </p:dialog>
+    <p:dialog header="Password Erfolgreich!!!" appendTo="@(body)" width="auto" height="auto" modal="true" responsive="true" widgetVar="dlgpwdsuccess" resizable="false" closable="true" position="center">
+        <p:panelGrid columns="2" layout="grid"> 
+            <p:column>
+                <h5>Wir senden Ihnen eine Bestätigungs-E-Mail. Klicken Sie auf den darin enthaltenen Link, um Ihr Passwort zu ändern.</h5>
+            </p:column>
+            <p:column>
+                <h:outputText value=""  styleClass="fa fa-check-circle-o" />  
+            </p:column>
+            <p:column colspan="2">
+                <p:commandButton value="Einlogen" icon="fa fa-sign-in" onclick="PF('dlgpwdsuccess').hide();PF('dlglogin').show();"/>
+            </p:column>
+        </p:panelGrid>
+        <f:facet name="footer">
+        </f:facet>  
+    </p:dialog>
+    <p:dialog header="Neu registrieren" appendTo="@(body)" width="auto" height="auto" modal="true" responsive="true" widgetVar="dlgregister" resizable="false" closable="true" position="center">
+        <p:panelGrid columns="8">
+            <!--**Salutation**-->
+            <p:fieldset legend="Persönliche Daten">
+                <p:panelGrid columns="1" layout="grid">
+                    <p:outputLabel for="salutation" value="Anrede*"/>
+                    <p:selectOneMenu id="salutation"  value="#{customerController.customer.salutation}" required="true" placeholder="Anrede *">
+                        <f:selectItem itemLabel="Herr"/>
+                        <f:selectItem itemLabel="Frau"/>
+                    </p:selectOneMenu>
+                    <h:outputLabel for="title" value="Title:"  />
+                    <p:inputText id="title"  value="#{customerController.customer.title}" required="true" label="title"/>
+                    <!--**Name**-->
+                    <h:outputLabel for="firstnamepd" value="Vorname*:"  />
+                    <p:inputText id="firstnamepd"  value="#{customerController.customer.firstname}" required="true" label="firstname"/>
+
+                    <h:outputLabel for="lastnamepd" value="Nachname*:"  />
+                    <p:inputText id="lastnamepd"  value="#{customerController.customer.lastname}" required="true" label="lastname"/>
+                    <!--////////////Name Ende////////////-->
+                </p:panelGrid>
+            </p:fieldset>
+
+            <!--**Kunde Adresse**-->
+            <p:fieldset legend="Adressdaten">
+                <p:panelGrid columns="1" layout="grid">
+                    <h:outputLabel for="firstname" value="Vorname*:"  />
+                    <p:inputText id="firstname"  value="#{customerController.customer.address.firstname}" required="true" label="firstname"/>
+
+                    <h:outputLabel for="lastname" value="Nachname*:"  />
+                    <p:inputText id="lastname"  value="#{customerController.customer.address.lastname}" required="true" label="lastname"/>
+
+                    <h:outputLabel for="street" value="Straße und Hausnummer*:"  />
+                    <p:inputText id="street"  value="#{customerController.customer.address.street1}" required="true" label="street"/>
+
+                    <h:outputLabel for="addaddress" value="Addresszusatz*:"  />
+                    <p:inputText id="addaddress"  value="#{customerController.customer.address.additionaladdress}" required="true" label="addaddress"/>
+
+                    <h:outputLabel for="zipcode" value="PLZ*:"  />
+                    <p:inputNumber id="zipcode"  value="#{customerController.customer.address.zipCode}" required="true" label="zipcode"/>
+
+                    <h:outputLabel for="country" value="Ort*:"  />
+                    <p:inputNumber id="country"  value="#{customerController.customer.address.country}" required="true" label="country"/>               
+                </p:panelGrid>
+            </p:fieldset>
+            <!--////////////Kontaktdaten////////////--> 
+
+            <!--**Kontaktdaten**-->
+            <p:fieldset legend="Kontaktdaten">
+                <p:panelGrid columns="1" layout="grid">
+                    <p:outputLabel for="customer-type" value="Konto Type"/>
+                    <p:selectOneMenu id="customer-type"   value="#{customerController.customer.status}" required="true" placeholder="Type *" >
+                        <f:selectItem itemLabel="Type *" itemValue="1" />
+                        <f:selectItem itemLabel="Gast" itemValue="2" />
+                        <f:selectItem itemLabel="Student" itemValue="3" />
+                        <f:selectItem itemLabel="Lehrende und wiss. Mitarbeiter" itemValue="4" />
+                    </p:selectOneMenu>
+                    <h:outputLabel for="email" value="E-mail*:"  />
+                    <p:inputMask id="email"  value="#{customerController.customer.email}" mask="{/[a-z0-9_\.\-@]/i}" required="true" label="email" requiredMessage="Bitte geben Ihre E-mail Adresse ein."
+                                 validatorMessage="ungültiges Email-Format/Invalid email format"/>
+
+                    <h:outputLabel for="matriculation" value="Matrikelnummer:"  />
+                    <p:inputText id="matriculation"  value="#{customerController.customer.matriculation}" required="false" label="matriculation"/>
+
+                    <h:outputLabel for="phone" value="Telefon:"  />
+                    <p:inputMask id="phone"  value="#{customerController.customer.phone}" mask="(+99) 999-999999" required="false" label="phone" requiredMessage="Bitte geben Ihre Telefonnummer ein."
+                                 validatorMessage="ungültiges Telefonnummer-Format/Invalid Telefonnummer format"/>
+
+                    <h:outputLabel for="birthday" value="Geburtsdatum:"  />
+                    <p:calendar id="birthday"  value="#{customerController.customer.birthday}" navigator="true" pattern="yyyy-MM-dd" required="false" label="birthday" requiredMessage="Bitte geben Ihre E-mail Adresse."
+                                validatorMessage="ungültiges Email-Format/Invalid email format"/>
+
+                </p:panelGrid>
+            </p:fieldset> 
+            <!--////////////Kontaktdaten Ende/[\d\+\(\)]/////////////--> 
+        </p:panelGrid>
+        <f:facet name="footer">
+            <div class="mx-auto" style="width: 150px;">
+                <p:commandButton class="btn btn-primary btn-lg btn-block" value="registrieren" icon="fa fa-user-plus" />        
+            </div>        
+        </f:facet>  
+    </p:dialog>
+
+    <!--    E-Mail-Adresse wird bereits verwendet
+        Sie haben angegeben, dass Sie ein neuer Kunde sind, es existiert aber bereits ein Konto mit der E-Mail-Adresse moureg2001@gmail.com-->
+
+</html>

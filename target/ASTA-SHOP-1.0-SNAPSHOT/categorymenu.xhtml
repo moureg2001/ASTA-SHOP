@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./index.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="content">
+<!--        <h:form id="categoryForm">-->
+<p:dataGrid id="categoryList" var="cat" value="#{menuController.selectedCategories}" columns="3" rows="12" layout="grid">
+<!--            <f:facet name="header">
+                Kategorien
+            </f:facet>-->
+            <p:panel style="text-align:center">
+                <p:panelGrid columns="1" style="width:100%" layout="grid">
+                    <p:graphicImage width="100" height="100"  class="img-responsive" value="http://via.placeholder.com/200x250"/> 
+
+                    <p:commandLink update="categoryList" oncomplete="PF('carDialog').show()" title="View Detail">
+                        <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
+                        <f:setPropertyActionListener value="#{cat}" target="#{menuController.selectedCategory}" />
+                    </p:commandLink>
+                </p:panelGrid>
+            </p:panel>
+        </p:dataGrid>
+<!--        </h:form>-->
+    </ui:define>
+
+</ui:composition>
